@@ -70,6 +70,9 @@
         enable = true;
         userName = "Josiah Witt";
         userEmail = "josiah@witt.life";
+        extraConfig = {
+          core.editor = "${pkgs.vim}/bin/vim";
+        };
       };
 
       tmux = {
