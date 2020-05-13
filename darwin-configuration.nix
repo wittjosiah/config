@@ -112,6 +112,39 @@
         enableAutosuggestions = true;
         enableCompletion = true;
 
+        initExtra = ''
+          # From https://apas.gr/2018/11/dark-mode-macos-safari-iterm-vim/
+          if [[ "$(uname -s)" == "Darwin" ]]; then
+              godark() {
+                val=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+                if [[ $val != "Dark" ]]; then
+                  t
+                fi
+              }
+
+              t() {
+                if [[ $ITERM_PROFILE == "Light" ]]; then
+                  setprofile "Dark"
+                else
+                  setprofile "Light"
+                fi
+              }
+
+              setprofile() {
+                if [ -n "$TMUX" ]
+                then
+                  echo -ne "\033Ptmux;\033\033]1337;SetProfile=$1\007\033\\"
+                else
+                  echo -ne "\033]50;SetProfile=$1\a"
+                fi
+
+                export ITERM_PROFILE="$1"
+              }
+
+              godark
+          fi
+        '';
+
         oh-my-zsh.enable = true;
 
         plugins = [

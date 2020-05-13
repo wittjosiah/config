@@ -48,6 +48,7 @@ brew cask install firefox
 brew cask install keepingyouawake
 brew cask install libreoffice
 brew cask install riot
+brew cask install shifty
 brew cask install sonos
 brew cask install spotify
 brew cask install spotify-now-playing

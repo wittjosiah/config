@@ -8,6 +8,7 @@ brew cask uninstall firefox
 brew cask uninstall keepingyouawake
 brew cask uninstall libreoffice
 brew cask uninstall riot
+brew cask uninstall shifty
 brew cask uninstall sonos
 brew cask uninstall spotify
 brew cask uninstall spotify-now-playing
