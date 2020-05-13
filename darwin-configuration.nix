@@ -136,8 +136,10 @@
               setprofile() {
                 if [ -n "$TMUX" ]
                 then
+                  # Reference: https://github.com/tmux/tmux/wiki/FAQ#what-is-the-passthrough-escape-sequence-and-how-do-i-use-it
                   echo -ne "\033Ptmux;\033\033]1337;SetProfile=$1\007\033\\"
                 else
+                  # Reference: https://www.iterm2.com/documentation-escape-codes.html
                   echo -ne "\033]50;SetProfile=$1\a"
                 fi
 
