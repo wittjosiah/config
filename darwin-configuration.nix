@@ -62,7 +62,6 @@
       elmPackages.elm
       emacsMacport
       iterm2
-      git
       gitAndTools.pre-commit
       gnupg
       nodejs

@@ -1,7 +1,19 @@
 #!/bin/bash
 
-# NOTE: run from ~/dev/config
-# TODO: Disable SIP and install XCode
+read -p "Have you disabled SIP and installed XCode? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+  echo "Disable SIP and install XCode before continuing!"
+  exit 1
+fi
+
+expected_dir=~/dev/config
+if [ $(pwd) != $expected_dir ]
+then
+  echo "Move config to ~/dev/config before running!"
+  exit 1
+fi
 
 # Install XCode Command Line Tools
 xcode-select --install
@@ -41,17 +53,27 @@ brew cask install spotify
 brew cask install spotify-now-playing
 brew cask install standard-notes
 
-# Personal
-brew cask install garmin-express
-# TODO: remove garmin login item
-brew cask install patchwork
-brew cask install steam
+# Home
+read -p "Install home-specific software? (y/n) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  installed_garmin=true
+  brew cask install garmin-express
+  brew cask install patchwork
+  brew cask install steam
+fi
 
 # Work
-brew cask install postico
-brew cask install slack
-brew cask install toggl
-brew cask install zoomus
+read -p "Install work-specific software? (y/n) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  brew cask install postico
+  brew cask install slack
+  brew cask install toggl
+  brew cask install zoomus
+fi
 
 # Development
 chsh -s /run/current-system/sw/bin/zsh
@@ -79,3 +101,8 @@ brew cask install docker
 brew cask install font-source-code-pro
 brew cask install insomnia
 brew cask install vscodium
+
+if [ $installed_garmin ]
+then
+  echo "Don't forget to remove the Garmin Express login item!"
+fi
