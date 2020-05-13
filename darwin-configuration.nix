@@ -33,12 +33,32 @@
   home-manager.useUserPackages = true;
 
   home-manager.users.jdw = { pkgs, ... }: {
+    nixpkgs.overlays = [ (import ./overlays) ];
+
+    home.file = {
+      ".skhdrc" = {
+        source = ~/dev/config/skhdrc;
+        onChange = ''
+          launchctl stop org.nixos.skhd
+          launchctl start org.nixos.skhd
+        '';
+      };
+
+      ".spacemacs" = {
+        source = pkgs.substituteAll {
+          elixirls = pkgs.elixir-ls;
+          src = ~/dev/config/spacemacs;
+        };
+      };
+    };
+
     home.packages = with pkgs; [
       awscli
       bash-completion
       cargo
       direnv
       elixir
+      elixir-ls
       elmPackages.elm
       emacsMacport
       iterm2
@@ -56,6 +76,12 @@
     ];
 
     programs = {
+      git = {
+        enable = true;
+        userName = "Josiah Witt";
+        userEmail = "josiah@witt.life";
+      };
+
       tmux = {
         enable = true;
         baseIndex = 1;

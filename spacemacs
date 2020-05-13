@@ -532,7 +532,7 @@ before packages are loaded."
     :hook
     (elixir-mode . lsp)
     :init
-    (add-to-list 'exec-path "/Users/josiah/elixir-ls/release")
+    (add-to-list 'exec-path "@elixirls@/bin")
     (setq lsp-enable-file-watchers nil))
 
   (eval-after-load "elixir-mode"
