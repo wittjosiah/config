@@ -59,8 +59,9 @@ read -p "Install home-specific software? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-  installed_garmin=true
+  brew cask install backblaze
   brew cask install garmin-express
+  installed_garmin=true
   brew cask install patchwork
   brew cask install steam
 fi

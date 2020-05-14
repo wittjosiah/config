@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: run backblaze uninstaller
+
 # General
 brew cask uninstall bitwarden
 brew cask uninstall chromium
@@ -15,8 +17,8 @@ brew cask uninstall spotify
 brew cask uninstall standard-notes
 
 # Personal
+brew cask uninstall backblaze
 brew cask uninstall garmin-express
-# TODO: remove garmin login item
 brew cask uninstall patchwork
 brew cask uninstall steam
 
