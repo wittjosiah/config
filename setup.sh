@@ -45,6 +45,7 @@ brew cask install bitwarden
 brew cask install chromium
 brew cask install dropbox
 brew cask install firefox
+brew cask install font-fontawesome
 brew cask install keepingyouawake
 brew cask install libreoffice
 brew cask install riot

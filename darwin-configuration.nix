@@ -177,6 +177,21 @@
       enable = true;
       skhdConfig = import ./skhd.nix;
     };
+    spacebar = {
+      enable = true;
+      package = pkgs.spacebar;
+      config = {
+        background_color = "0xff202020";
+        clock_format     = "%R";
+        clock_icon       = "";
+        foreground_color = "0xffa8a8a8";
+        icon_font        = ''"Font Awesome 5 Free:Solid:12.0"'';
+        power_icon_strip = " ";
+        space_icon       = "";
+        space_icon_strip = "I II III IV V VI VII VIII IX X";
+        text_font        = ''"Helvetica Neue:Bold:12.0"'';
+      };
+    };
     yabai = {
       enable = true;
       enableScriptingAddition = true;

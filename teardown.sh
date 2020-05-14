@@ -5,6 +5,7 @@ brew cask uninstall bitwarden
 brew cask uninstall chromium
 brew cask uninstall dropbox
 brew cask uninstall firefox
+brew cask uninstall font-fontawesome
 brew cask uninstall keepingyouawake
 brew cask uninstall libreoffice
 brew cask uninstall riot
