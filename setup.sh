@@ -51,7 +51,6 @@ brew cask install riot
 brew cask install shifty
 brew cask install sonos
 brew cask install spotify
-brew cask install spotify-now-playing
 brew cask install standard-notes
 
 # Home

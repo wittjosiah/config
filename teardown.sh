@@ -11,7 +11,6 @@ brew cask uninstall riot
 brew cask uninstall shifty
 brew cask uninstall sonos
 brew cask uninstall spotify
-brew cask uninstall spotify-now-playing
 brew cask uninstall standard-notes
 
 # Personal
