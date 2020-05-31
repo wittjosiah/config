@@ -43,6 +43,7 @@ brew tap homebrew/cask-fonts
 # General
 brew cask install bitwarden
 brew cask install chromium
+brew cask install cryptomator
 brew cask install dropbox
 brew cask install firefox
 brew cask install font-fontawesome

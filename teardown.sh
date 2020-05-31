@@ -5,6 +5,7 @@
 # General
 brew cask uninstall bitwarden
 brew cask uninstall chromium
+brew cask uninstall cryptomator
 brew cask uninstall dropbox
 brew cask uninstall firefox
 brew cask uninstall font-fontawesome
