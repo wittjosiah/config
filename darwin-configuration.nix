@@ -167,6 +167,7 @@
 
         shellAliases = {
           ll = "ls -la";
+          phx = "iex -S mix phx.server";
         };
       };
     };
