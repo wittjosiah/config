@@ -46,13 +46,14 @@ This function should only modify configuration layer settings."
      emacs-lisp
      (git :variables git-magit-status-fullscreen t)
      helm
-     html
-     (lsp :variables lsp-ui-doc-enable nil)
+     (html :variables
+           css-indent-offset 2)
      (javascript :variables
                  javascript-backend 'lsp
                  javascript-fmt-tool 'prettier
                  js-indent-level 2
                  js2-basic-offset 2)
+     (lsp :variables lsp-ui-doc-enable nil)
      (markdown :variables markdown-live-preview-engine 'vmd)
      multiple-cursors
      ;; org
@@ -210,7 +211,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(monokai
+   dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -502,28 +503,18 @@ before packages are loaded."
   (setq split-height-threshold nil)
   (setq split-width-threshold 0)
 
-  (setq magit-repository-directories '("~/projects/"))
+  (setq magit-repository-directories '("~/dev/"))
 
   (setq-default
-   ;; javascript-mode
-   javascript-indent-level 2
-   ;; js-mode
-   js-indent-level 2
-   ;; js2-mode
-   js2-basic-offset 2
-   ;; web-mode
-   css-indent-offset 2
-   web-mode-markup-indent-offset 2
-   web-mode-css-indent-offset 2
-   web-mode-code-indent-offset 2
-   web-mode-attr-indent-offset 2)
+    web-mode-markup-indent-offset 2
+    web-mode-css-indent-offset 2
+    web-mode-code-indent-offset 2
+    web-mode-attr-indent-offset 2)
+
   (with-eval-after-load 'web-mode
     (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
     (add-to-list 'web-mode-indentation-params '("lineup-concats" . nil))
     (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil)))
-  (add-to-list 'auto-mode-alist '("\\.html.leex\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . react-mode))
-  (add-to-list 'spacemacs-indent-sensitive-modes 'react-mode)
 
   (use-package lsp-mode
     :commands lsp
@@ -535,12 +526,8 @@ before packages are loaded."
     (add-to-list 'exec-path "@elixirls@/bin")
     (setq lsp-enable-file-watchers nil))
 
-  (eval-after-load "elixir-mode"
-    '(defun elixir-format--mix-executable ()
-       (string-trim-right (shell-command-to-string "asdf which mix"))))
   (add-hook 'elixir-mode-hook
             (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
-
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
