@@ -54,9 +54,9 @@
       elmPackages.elm
       emacsMacport
       iterm2
-      gitAndTools.pre-commit
       gnupg
       nodejs
+      nodePackages.prettier
       pgcli
       python3
       rustc
