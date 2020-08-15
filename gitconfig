@@ -1,0 +1,6 @@
+[user]
+	name = "Josiah Witt"
+	email = "josiah@witt.life"
+
+[core]
+	editor = /usr/local/bin/vim
