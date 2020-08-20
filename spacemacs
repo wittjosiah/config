@@ -56,7 +56,7 @@ This function should only modify configuration layer settings."
      (lsp :variables lsp-ui-doc-enable nil)
      (markdown :variables markdown-live-preview-engine 'vmd)
      multiple-cursors
-     org
+     (org :variables org-want-todo-bindings t)
      react
      (rust :variables rust-format-on-save t)
      (shell :variables
@@ -80,7 +80,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(org-super-agenda)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -497,13 +497,16 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; GUI
   (setq mac-use-title-bar nil)
   (setq frame-resize-pixelwise t)
   (setq split-height-threshold nil)
   (setq split-width-threshold 0)
 
+  ;; Git
   (setq magit-repository-directories '("~/dev/"))
 
+  ;; Web
   (setq-default
     web-mode-markup-indent-offset 2
     web-mode-css-indent-offset 2
@@ -517,6 +520,7 @@ before packages are loaded."
 
   (add-to-list 'auto-mode-alist '("\\.html.l?eex\\'" . web-mode))
 
+  ;; Elixir
   (use-package lsp-mode
     :commands lsp
     :ensure t
@@ -530,7 +534,135 @@ before packages are loaded."
   (add-hook 'elixir-mode-hook
             (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
 
+  ;; Org
+  ;;;; References
+  ;;;; http://doc.norang.ca/org-mode.html
+  ;;;; https://colekillian.com/snippets/getting-started-with-org-super-agenda-on-spacemacs/
+
+  ;;;; Org Files
+  (setq org-directory "~/Dropbox/Notes")
+  (setq org-default-notes-file "~/Dropbox/Notes/inbox.org")
   (setq org-agenda-files (quote ("~/Dropbox/Notes")))
+  (defvar org-default-diary-file "~/Dropbox/Notes/journal.org")
+
+
+  ;;;; Org Keywords
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "orange" :weight bold)
+                ("NEXT" :foreground "forest green" :weight bold)
+                ("DONE" :foreground "purple" :weight bold)
+                ("WAITING" :foreground "magenta" :weight bold)
+                ("HOLD" :foreground "gray" :weight bold)
+                ("CANCELLED" :foreground "purple" :weight bold)
+                ("MEETING" :foreground "purple" :weight bold)
+                ("PHONE" :foreground "purple" :weight bold))))
+
+  (setq org-todo-state-tags-triggers
+        (quote (("CANCELLED" ("CANCELLED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+  ;;;; Org Capture
+  (setq org-capture-templates
+        (quote (("t" "TODO" entry (file org-default-notes-file)
+                 "* TODO %?\n%U\n%a\n")
+                ("b" "Blank" entry (file org-default-notes-file)
+	               "* %?\n%u")
+                ("n" "Note" entry (file org-default-notes-file)
+                 "* %? :NOTE:\n%U\n%a\n")
+                ("j" "Journal" entry (file+datetree "~/Dropbox/Notes/journal.org")
+                 "* %?\n%U\n")
+                ("D" "Daily Log" entry (file "~/Dropbox/Notes/daily-log.org")
+	               "* %u %?\n#+BEGIN: gjs-daily-clocktable :maxlevel 4 :date \"%u\" :link t :compact t \n#+END:\n\n*Summary*: \n\n*Problem*: \n\n*Insight*: \n\n*Tomorrow*: ")
+                ("m" "Meeting" entry (file org-default-notes-file)
+                 "* MEETING with %? :MEETING:\n%U")
+                ("h" "Habit" entry (file org-default-notes-file)
+                 "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+
+  ;;;; Org Refile
+  (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                   (org-agenda-files :maxlevel . 9))))
+
+  (setq org-refile-use-outline-path t)
+  (setq org-outline-path-complete-in-steps nil)
+
+  (defun bh/verify-refile-target ()
+    "Exclude todo keywords with a done state from refile targets"
+    (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+  (setq org-refile-target-verify-function 'bh/verify-refile-target)
+
+
+  ;;;; Org Tagging
+  (setq org-tag-alist (quote ((:startgroup)
+                              ("@errand" . ?e)
+                              ("@office" . ?o)
+                              ("@home" . ?H)
+                              (:endgroup)
+                              ("WAITING" . ?w)
+                              ("HOLD" . ?h)
+                              ("PERSONAL" . ?p)
+                              ("SIDEPROJECT" . ?s)
+                              ("WORK" . ?w)
+                              ("NOTE" . ?n)
+                              ("CANCELLED" . ?c)
+                              ("FLAGGED" . ?f))))
+
+  (setq org-fast-tag-selection-single-key (quote expert))
+
+  ;;;; Org Agenda
+  (setq org-agenda-custom-commands
+        '(("n" "Next View"
+           ((agenda "" ((org-agenda-span 'day)
+                        (org-super-agenda-groups
+                         '((:name "Today"
+                                  :time-grid t
+                                  :todo "TODAY"
+                                  :scheduled today
+                                  :order 0)
+                           (:habit t)
+                           (:name "Due Today"
+                                  :deadline today
+                                  :order 2)
+                           (:name "Due Soon"
+                                  :deadline future
+                                  :order 8)
+                           (:name "Overdue"
+                                  :deadline past
+                                  :order 7)
+                           ))))
+            (todo "" ((org-agenda-overriding-header "")
+                      (org-super-agenda-groups
+                       '((:name "Inbox"
+                                :file-path "inbox"
+                                :order 0
+                                )
+                         (:discard (:todo "TODO"))
+                         (:auto-category t
+                                         :order 9)
+                         ))))))
+          ("t" "Todo View"
+           (
+            (todo "" ((org-agenda-overriding-header "")
+                      (org-super-agenda-groups
+                       '((:name "Inbox"
+                                :file-path "inbox"
+                                :order 0
+                                )
+                         (:auto-category t
+                                         :order 9)
+                         ))))))
+          ))
+
+  (org-super-agenda-mode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -546,7 +678,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-brain helm-org-rifle helm-org gnuplot evil-org xterm-color vterm terminal-here spotify shell-pop multi-term monokai-theme helm-spotify-plus multi eshell-z eshell-prompt-extras esh-help yasnippet-snippets yaml-mode web-mode web-beautify vmd-mode unfill treemacs-magit toml-mode tern tagedit sql-indent smeargle slim-mode scss-mode sass-mode rjsx-mode racer pug-mode prettier-js ob-elixir nodejs-repl mwim mmm-mode markdown-toc magit-svn magit-section magit-gitflow magit-popup lsp-ui lsp-treemacs livid-mode skewer-mode json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc impatient-mode htmlize simple-httpd helm-lsp lsp-mode dash-functional helm-gitignore helm-git-grep helm-css-scss helm-company helm-c-yasnippet haml-mode gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ fringe-helper git-gutter+ gh-md fuzzy flycheck-rust flycheck-pos-tip pos-tip flycheck-mix flycheck-credo evil-magit magit git-commit with-editor transient emmet-mode csv-mode company-web web-completion-data company-statistics cargo markdown-mode rust-mode browse-at-remote auto-yasnippet yasnippet alchemist company elixir-mode ac-ispell auto-complete ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection spaceline-all-the-icons restart-emacs request rainbow-delimiters popwin pcre2el password-generator paradox overseer org-plus-contrib org-bullets open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag google-translate golden-ratio font-lock+ flycheck-package flycheck-elsa flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav editorconfig dumb-jump dotenv-mode diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
+   '(org-super-agenda ts orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download org-cliplink org-brain helm-org-rifle helm-org gnuplot evil-org xterm-color vterm terminal-here spotify shell-pop multi-term monokai-theme helm-spotify-plus multi eshell-z eshell-prompt-extras esh-help yasnippet-snippets yaml-mode web-mode web-beautify vmd-mode unfill treemacs-magit toml-mode tern tagedit sql-indent smeargle slim-mode scss-mode sass-mode rjsx-mode racer pug-mode prettier-js ob-elixir nodejs-repl mwim mmm-mode markdown-toc magit-svn magit-section magit-gitflow magit-popup lsp-ui lsp-treemacs livid-mode skewer-mode json-navigator hierarchy json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc impatient-mode htmlize simple-httpd helm-lsp lsp-mode dash-functional helm-gitignore helm-git-grep helm-css-scss helm-company helm-c-yasnippet haml-mode gitignore-templates gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ fringe-helper git-gutter+ gh-md fuzzy flycheck-rust flycheck-pos-tip pos-tip flycheck-mix flycheck-credo evil-magit magit git-commit with-editor transient emmet-mode csv-mode company-web web-completion-data company-statistics cargo markdown-mode rust-mode browse-at-remote auto-yasnippet yasnippet alchemist company elixir-mode ac-ispell auto-complete ws-butler writeroom-mode winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package treemacs-projectile treemacs-persp treemacs-icons-dired treemacs-evil toc-org symon symbol-overlay string-inflection spaceline-all-the-icons restart-emacs request rainbow-delimiters popwin pcre2el password-generator paradox overseer org-plus-contrib org-bullets open-junk-file nameless move-text macrostep lorem-ipsum link-hint indent-guide hybrid-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-make helm-ls-git helm-flx helm-descbinds helm-ag google-translate golden-ratio font-lock+ flycheck-package flycheck-elsa flx-ido fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav editorconfig dumb-jump dotenv-mode diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile aggressive-indent ace-link ace-jump-helm-line)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
