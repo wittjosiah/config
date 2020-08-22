@@ -646,6 +646,7 @@ before packages are loaded."
                                 :order 0
                                 )
                          (:discard (:todo "TODO"))
+                         (:discard (:habit f))
                          (:auto-category t
                                          :order 9)
                          ))))))
