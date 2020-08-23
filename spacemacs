@@ -619,6 +619,9 @@ before packages are loaded."
   (setq org-fast-tag-selection-single-key (quote expert))
 
   ;;;; Org Agenda
+  (setq org-agenda-prefix-format
+        '((todo . " %i %(concat \"[ \"(org-format-outline-path (org-get-outline-path)) \" ]\") ")))
+
   (setq org-agenda-custom-commands
         '(("n" "Next View"
            ((agenda "" ((org-agenda-span 'day)
