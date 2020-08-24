@@ -4,3 +4,6 @@
 
 [core]
 	editor = /usr/local/bin/vim
+
+[pull]
+  rebase = false
