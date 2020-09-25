@@ -92,7 +92,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-brew install coreutils curl direnv git pre-commit vim
+brew install coreutils curl direnv git pre-commit vim wxmac
 brew install asdf
 
 git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
