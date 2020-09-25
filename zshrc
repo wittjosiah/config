@@ -23,7 +23,7 @@ alias phx='iex -S mix phx.server'
 
 # ASDF
 
-. $HOME/.asdf/asdf.sh
+. /usr/local/opt/asdf/asdf.sh
 fpath=(${ASDF_DIR}/completions $fpath)
 autoload -Uz compinit
 compinit

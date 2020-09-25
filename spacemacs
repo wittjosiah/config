@@ -500,6 +500,7 @@ before packages are loaded."
   ;; GUI
   (setq mac-use-title-bar nil)
   (setq frame-resize-pixelwise t)
+  ;; Comment out for vertical screen
   (setq split-height-threshold nil)
   (setq split-width-threshold 0)
 
