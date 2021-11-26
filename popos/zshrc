@@ -1,0 +1,4 @@
+source ~/.zsh/ohmy.zshrc
+source ~/.zsh/config.zshrc
+source ~/.zsh/aliases.zshrc
+source ~/.zsh/programs.zshrc
