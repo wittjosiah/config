@@ -1,3 +1,4 @@
+@bitwarden/cli
 @microsoft/rush
 pnpm
 yarn

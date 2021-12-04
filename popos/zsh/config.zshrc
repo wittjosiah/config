@@ -4,6 +4,7 @@ export EDITOR="vim"
 export LANG=en_US.UTF-8
 export MANPATH="/usr/local/man:$MANPATH"
 export PROJECTS_DIR="/home/jdw/Code"
+export WEB_EXT_FIREFOX="/usr/local/firefox_dev/firefox"
 
 # HISTORY
 # https://www.soberkoder.com/better-zsh-history/
@@ -22,3 +23,4 @@ setopt HIST_IGNORE_ALL_DUPS
 
 setopt share_history
 setopt hist_verify
+
