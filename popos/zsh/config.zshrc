@@ -1,5 +1,8 @@
 # USER CONFIGURATION
 
+export PATH="$PATH:/home/jdw/.local/bin"
+export PATH="$PATH:$(yarn global bin)"
+
 export EDITOR="vim"
 export LANG=en_US.UTF-8
 export MANPATH="/usr/local/man:$MANPATH"

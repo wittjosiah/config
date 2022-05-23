@@ -6,8 +6,8 @@ autoload -Uz compinit && compinit
 
 # ALACRITTY
 
-LIGHT_COLOR='pencil_light.yaml'
-DARK_COLOR='pencil_dark.yaml'
+LIGHT_COLOR='pencil_light.yml'
+DARK_COLOR='pencil_dark.yml'
 
 alias day="alacritty-colorscheme -V apply $LIGHT_COLOR"
 alias night="alacritty-colorscheme -V apply $DARK_COLOR"
