@@ -22,9 +22,10 @@ alias prune="git fetch -p && (git checkout -q origin/master || git checkout -q o
 
 # RUSH
 
-alias rr='rush update && rush build && rush release'
-alias rurrlt='rush update && rush rebuild && rush release && rush lint && rush test'
-alias rp='rush purge'
+alias rr='rush update && rush build'
+alias rb='rush build'
+alias rt='rush build:test'
+alias rp='rush purge && rush update && rush rebuild'
 
 alias rlf='rushx lint --fix'
 alias rpw='CI=true rushx test:playwright'
